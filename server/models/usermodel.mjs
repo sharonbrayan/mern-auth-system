@@ -27,11 +27,11 @@ const userSchema=mongoose.Schema(
             type:Boolean,
             default:false
         },
-         restOtp:{
+         resetOtp:{
             type:String,
             default:''
         },
-        restOtpExpiryAt:{
+        resetOtpExpiryAt:{
             type:Number,
             default:0
         },
