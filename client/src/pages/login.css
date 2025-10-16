@@ -1,0 +1,24 @@
+.body{
+    background-color: rgb(176, 176, 228);
+}
+.form-body{
+    background-color: rgb(186, 192, 226);
+    border-radius: 10px;
+}
+input{
+    border-radius: 25px;
+    border: 2px solid white;
+    background-color: rgb(217, 217, 228);
+    padding: 7px;
+}
+input::placeholder {
+  transform: translateX(10px);
+  color: rgb(146, 142, 142);
+}
+.error-message{
+    font-size: x-small;
+}
+span{
+    color: rgb(37, 37, 230);
+    cursor: pointer;
+}
