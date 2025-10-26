@@ -1,19 +1,46 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import './login.css';
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../contexts/appConetxt";
+import { toast } from "react-toastify";
+import axios from 'axios'
 
-export default function App() {
+export default function Login() {
+  const navigate = useNavigate();
+  const { backendUrl, setisLoggedIn, getUserData } = useContext(AppContext);
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm()
   const [state, setstate] = useState('sign up');
-  const [uname, setuname] = useState('');
+  const [name, setname] = useState('');
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
+  axios.defaults.withCredentials = true;
 
-
-  const onSubmit = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    console.log(data);
+  const onSubmit = async (formData) => {
+    try {
+      if (state === 'sign up') {
+        const { data } = await axios.post(backendUrl + '/api/auth/register', formData);
+        if (data.success) {
+          setisLoggedIn(true);
+          toast.success("register success");
+          getUserData();
+          navigate('/');
+        } else {
+          toast.error(data.message)
+        }
+      } else {
+        const { data } = await axios.post(backendUrl + '/api/auth/login', formData);
+        if (data.success) {
+          setisLoggedIn(true);
+          getUserData();
+          navigate('/');
+        } else {
+          toast.error(data.message)
+        }
+      }
+    } catch (error) {
+      toast.error(error)
+    }
   }
 
   return (
@@ -33,7 +60,7 @@ export default function App() {
             {errors.email && <p className="text-danger error-message">{errors.email.message}</p>}
             <input className="mb-2" {...register("password", { minLength: { value: 8, message: "Must contain atleast 8 characters" }, maxLength: { value: 12, message: "Must not contain more than 12 characters" }, required: { value: true, message: "Must not be empty" } })} placeholder="Enter Your Password" type="password" />
             {errors.password && <p className="text-danger error-message">{errors.password.message}</p>}
-            {state === 'login' && <span>Forgot Password?</span>}
+            {state === 'login' && <span onClick={() => navigate('/reset-password')}>Forgot Password?</span>}
             <input type="submit" className="w-50 mx-auto my-3 btn btn-primary" disabled={isSubmitting} />
 
             {state === 'sign up' ? (

@@ -8,6 +8,7 @@ import { transport } from "../config/nodemailer.mjs";
 //USER REGISTER CONTROLLER
 export const register = async (req, res) => {
     const { uname, password, email } = req.body;
+    console.log(uname,password,email);
     if (!uname || !password || !email) {
         return res.json({ success: false, message: "missingg credentials" });
     }

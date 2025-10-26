@@ -11,15 +11,30 @@ const app=express();
 app.use(express.json())
 connectDb()
 
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173']; 
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({credentials:true}));
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true, 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+}));
 app.use('/api/auth',authRouter);
 app.use('/api/user',userRouter)
 app.get("/",(req,res) => {
     res.send("Api is working very fine")
 })
 
-app.listen(300,()=>{
-    console.log("server is running on port 300")
+app.listen(3000,()=>{
+    console.log("server is running on port 3000")
 })
